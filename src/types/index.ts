@@ -10,6 +10,8 @@ export type ArchetypeId =
 
 export type ColorClusterId = 'amber' | 'indigo' | 'karmijn' | 'jade';
 
+export type ScoreLevel = 'low' | 'moderate' | 'high' | 'very-high';
+
 export interface Archetype {
   id: ArchetypeId;
   name: string;
@@ -39,6 +41,7 @@ export interface Question {
   archetypeId: ArchetypeId;
   reverseScored: boolean;
   colorCluster: ColorClusterId;
+  consistencyPair?: number;
 }
 
 export interface Answer {
@@ -50,11 +53,21 @@ export interface ArchetypeScore {
   archetypeId: ArchetypeId;
   average: number;
   score100: number;
+  level: ScoreLevel;
+  standardDeviation: number;
 }
 
 export interface ClusterScore {
   clusterId: ColorClusterId;
   score100: number;
+  level: ScoreLevel;
+}
+
+export interface ConsistencyResult {
+  totalPairs: number;
+  consistentPairs: number;
+  score: number;
+  isReliable: boolean;
 }
 
 export interface ScoreResult {
@@ -62,10 +75,13 @@ export interface ScoreResult {
   clusterScores: ClusterScore[];
   highestArchetype: ArchetypeId;
   secondArchetype: ArchetypeId;
+  thirdArchetype: ArchetypeId;
+  lowestArchetype: ArchetypeId;
   highestCluster: ColorClusterId;
   secondCluster: ColorClusterId;
   isBlendProfile: boolean;
   isBalancedProfile: boolean;
+  consistency: ConsistencyResult;
   completedAt: string;
 }
 
