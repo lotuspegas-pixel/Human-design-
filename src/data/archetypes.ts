@@ -1,0 +1,98 @@
+import type { Archetype } from '../types';
+
+export const archetypes: Archetype[] = [
+  {
+    id: 'idea-finder',
+    name: 'The Idea Finder',
+    jungFunction: 'Ne',
+    meaning: 'Ziet nieuwe ideeën, opties en mogelijke routes.',
+    colorCluster: 'amber',
+    strength: 'Ziet ideeën, opties en mogelijkheden.',
+    riskUnderPressure: 'Te veel ideeën, te weinig afronding.',
+    growthEdge: 'Kies één route en maak die af.',
+    reflectionQuestion: 'Welke mogelijkheid verdient nu echt mijn aandacht?',
+  },
+  {
+    id: 'pattern-seer',
+    name: 'The Pattern Seer',
+    jungFunction: 'Ni',
+    meaning: 'Ziet patronen, diepere betekenis en toekomstige richting.',
+    colorCluster: 'indigo',
+    strength: 'Ziet betekenis, richting en verborgen patronen.',
+    riskUnderPressure: 'Te lang in reflectie blijven hangen.',
+    growthEdge: 'Toets inzichten in de echte wereld.',
+    reflectionQuestion: 'Welke eerste concrete stap past bij mijn inzicht?',
+  },
+  {
+    id: 'action-maker',
+    name: 'The Action Maker',
+    jungFunction: 'Se',
+    meaning: 'Handelt snel, merkt het heden op en reageert op echte situaties.',
+    colorCluster: 'karmijn',
+    strength: 'Handelt snel en leest het huidige moment.',
+    riskUnderPressure: 'Handelen voordat er genoeg is nagedacht.',
+    growthEdge: 'Pauzeer voordat je reageert.',
+    reflectionQuestion: 'Wat vraagt deze situatie nu echt van mij?',
+  },
+  {
+    id: 'calm-keeper',
+    name: 'The Calm Keeper',
+    jungFunction: 'Si',
+    meaning: 'Waardeert rust, herinnering, routine, ervaring en stabiliteit.',
+    colorCluster: 'jade',
+    strength: 'Brengt rust, herinnering, stabiliteit en zorg.',
+    riskUnderPressure: 'Te lang vasthouden aan het bekende.',
+    growthEdge: 'Sta kleine veilige veranderingen toe.',
+    reflectionQuestion: 'Welke verandering kan ik toelaten zonder mijn rust te verliezen?',
+  },
+  {
+    id: 'plan-builder',
+    name: 'The Plan Builder',
+    jungFunction: 'Te',
+    meaning: 'Creëert structuur, stappen, prioriteiten en resultaten.',
+    colorCluster: 'karmijn',
+    strength: 'Creëert structuur, prioriteiten en resultaten.',
+    riskUnderPressure: 'Te controlerend of te gefocust op output worden.',
+    growthEdge: 'Neem mensen en waarden mee in het plan.',
+    reflectionQuestion: 'Wie of wat moet ik meenemen voordat ik doorpak?',
+  },
+  {
+    id: 'clear-thinker',
+    name: 'The Clear Thinker',
+    jungFunction: 'Ti',
+    meaning: 'Analyseert, definieert, checkt logica en zoekt helderheid.',
+    colorCluster: 'indigo',
+    strength: 'Analyseert, definieert en vindt logische helderheid.',
+    riskUnderPressure: 'Te afstandelijk of te kritisch worden.',
+    growthEdge: 'Communiceer helderheid met warmte.',
+    reflectionQuestion: 'Hoe kan ik duidelijk zijn zonder hard over te komen?',
+  },
+  {
+    id: 'people-helper',
+    name: 'The People Helper',
+    jungFunction: 'Fe',
+    meaning: 'Leest mensen, creëert harmonie en ondersteunt sociale verbinding.',
+    colorCluster: 'amber',
+    strength: 'Begrijpt mensen en creëert verbinding.',
+    riskUnderPressure: 'Te veel aanpassen aan anderen.',
+    growthEdge: 'Houd je eigen behoeften zichtbaar.',
+    reflectionQuestion: 'Wat heb ik zelf nodig in deze situatie?',
+  },
+  {
+    id: 'heart-listener',
+    name: 'The Heart Listener',
+    jungFunction: 'Fi',
+    meaning: 'Volgt waarden, authenticiteit, persoonlijke waarheid en innerlijk gevoel.',
+    colorCluster: 'jade',
+    strength: 'Volgt waarden, authenticiteit en innerlijke waarheid.',
+    riskUnderPressure: 'Terugtrekken of innerlijk te vast komen te zitten.',
+    growthEdge: 'Vertaal waarden naar duidelijk gedrag.',
+    reflectionQuestion: 'Welke waarde wil ik nu zichtbaar maken in gedrag?',
+  },
+];
+
+export function getArchetype(id: string): Archetype {
+  const a = archetypes.find((a) => a.id === id);
+  if (!a) throw new Error(`Unknown archetype: ${id}`);
+  return a;
+}
