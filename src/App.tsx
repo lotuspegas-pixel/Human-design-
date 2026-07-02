@@ -1,19 +1,34 @@
 import { useState, useEffect } from 'react';
 import type { Answer, ScoreResult } from './types';
+import type { BirthData, HumanDesignResult } from './types/humanDesign';
 import { calculateScores } from './logic/scoring';
-import { saveResult, loadResult, clearAllData, clearProgress } from './utils/storage';
+import { calculateHumanDesign } from './logic/humanDesign/bodygraph';
+import {
+  saveResult,
+  loadResult,
+  clearAllData,
+  clearProgress,
+  saveHumanDesignData,
+  loadHumanDesignData,
+} from './utils/storage';
 import AppLayout from './components/AppLayout';
 import LandingPage from './pages/LandingPage';
 import ConsentScreen from './pages/ConsentScreen';
 import Questionnaire from './pages/Questionnaire';
 import ResultsPage from './pages/ResultsPage';
+import HumanDesignIntro from './pages/HumanDesignIntro';
+import BirthDataForm from './pages/BirthDataForm';
 
-type Page = 'landing' | 'consent' | 'questionnaire' | 'results';
+type Page = 'landing' | 'consent' | 'questionnaire' | 'results' | 'hd-intro' | 'hd-form';
 
 export default function App() {
   const [page, setPage] = useState<Page>('landing');
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [birthData, setBirthData] = useState<BirthData | null>(null);
+  const [hdResult, setHdResult] = useState<HumanDesignResult | null>(null);
+  const [hdCalculating, setHdCalculating] = useState(false);
+  const [hdError, setHdError] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = loadResult();
@@ -21,6 +36,11 @@ export default function App() {
       setResult(saved.scoreResult);
       setAnswers(saved.answers);
       setPage('results');
+    }
+    const savedHd = loadHumanDesignData();
+    if (savedHd) {
+      setBirthData(savedHd.birthData);
+      setHdResult(savedHd.hdResult);
     }
   }, []);
 
@@ -38,8 +58,30 @@ export default function App() {
     clearAllData();
     setResult(null);
     setAnswers([]);
+    setBirthData(null);
+    setHdResult(null);
     setPage('landing');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleHdSubmit = (data: BirthData) => {
+    setHdCalculating(true);
+    setHdError(null);
+    // Berekening even async maken zodat de "bezig"-status zichtbaar is voor de gebruiker.
+    setTimeout(() => {
+      try {
+        const calculated = calculateHumanDesign(data);
+        setBirthData(data);
+        setHdResult(calculated);
+        saveHumanDesignData(data, calculated);
+        setHdCalculating(false);
+        setPage('results');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch {
+        setHdError('De berekening is niet gelukt. Controleer je geboortedatum, -tijd en tijdzone en probeer het opnieuw.');
+        setHdCalculating(false);
+      }
+    }, 300);
   };
 
   return (
@@ -52,7 +94,25 @@ export default function App() {
         <Questionnaire onComplete={handleComplete} onBack={() => setPage('consent')} />
       )}
       {page === 'results' && result && (
-        <ResultsPage result={result} answers={answers} onReset={handleReset} />
+        <ResultsPage
+          result={result}
+          answers={answers}
+          onReset={handleReset}
+          hdResult={hdResult}
+          birthData={birthData}
+          onAddHumanDesign={() => setPage('hd-intro')}
+        />
+      )}
+      {page === 'hd-intro' && (
+        <HumanDesignIntro onAccept={() => setPage('hd-form')} onSkip={() => setPage('results')} />
+      )}
+      {page === 'hd-form' && (
+        <BirthDataForm
+          onSubmit={handleHdSubmit}
+          onBack={() => setPage('hd-intro')}
+          isCalculating={hdCalculating}
+          error={hdError}
+        />
       )}
     </AppLayout>
   );

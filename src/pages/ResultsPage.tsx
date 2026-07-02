@@ -1,7 +1,10 @@
 import type { Answer, ScoreResult } from '../types';
+import type { BirthData, HumanDesignResult } from '../types/humanDesign';
 import { archetypes, getArchetype } from '../data/archetypes';
 import { colorClusters, getCluster } from '../data/colorClusters';
 import { generateReport } from '../logic/report';
+import { generateMergedReport } from '../logic/humanDesign/mergedReport';
+import { typeInfo, authorityInfo } from '../data/humanDesign/interpretations';
 import ScoreBar from '../components/ScoreBar';
 import ColorClusterCard from '../components/ColorClusterCard';
 import ReportView from '../components/ReportView';
@@ -11,22 +14,29 @@ interface Props {
   result: ScoreResult;
   answers: Answer[];
   onReset: () => void;
+  hdResult: HumanDesignResult | null;
+  birthData: BirthData | null;
+  onAddHumanDesign: () => void;
 }
 
-export default function ResultsPage({ result, answers: _answers, onReset }: Props) {
+export default function ResultsPage({ result, answers: _answers, onReset, hdResult, birthData, onAddHumanDesign }: Props) {
   const primary = getArchetype(result.highestArchetype);
   const secondary = getArchetype(result.secondArchetype);
   const third = getArchetype(result.thirdArchetype);
   const mainCluster = getCluster(result.highestCluster);
-  const reportSections = generateReport(result);
   const primaryScore = result.archetypeScores.find((s) => s.archetypeId === result.highestArchetype)!;
   const secondaryScore = result.archetypeScores.find((s) => s.archetypeId === result.secondArchetype)!;
+
+  const reportSections =
+    hdResult && birthData ? generateMergedReport(result, hdResult, birthData) : generateReport(result);
 
   return (
     <div className="space-y-8 print:space-y-4">
       {/* Header */}
       <div className="text-center print:text-left">
-        <h2 className="mb-2 text-3xl font-bold text-stone-800">Jouw Arcana Profile</h2>
+        <h2 className="mb-2 text-3xl font-bold text-stone-800">
+          {birthData ? `De reading van ${birthData.firstName}` : 'Jouw Arcana Profile'}
+        </h2>
         <p className="text-stone-500">
           Voltooid op {new Date(result.completedAt).toLocaleDateString('nl-NL')}
         </p>
@@ -44,6 +54,39 @@ export default function ResultsPage({ result, answers: _answers, onReset }: Prop
           ? ' — je antwoorden zijn consequent en betrouwbaar.'
           : ' — overweeg het rapport met extra reflectie door te nemen.'}
       </div>
+
+      {/* Human Design CTA or summary */}
+      {!hdResult ? (
+        <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 shadow-sm print:hidden">
+          <h3 className="mb-2 text-lg font-semibold text-stone-800">Verdiep je reading</h3>
+          <p className="mb-4 text-sm text-stone-600">
+            Voeg een extra, optionele laag toe op basis van je geboortemoment (Human Design) en
+            ontvang één samengevoegde, persoonlijke reading.
+          </p>
+          <button
+            onClick={onAddHumanDesign}
+            className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-500"
+          >
+            Voeg Human Design toe
+          </button>
+        </div>
+      ) : (
+        <div className="rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 shadow-sm">
+          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-indigo-400">
+            Energetisch ontwerp
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <h3 className="text-xl font-bold text-stone-800">{typeInfo[hdResult.type].naam}</h3>
+              <p className="text-sm text-stone-600">{typeInfo[hdResult.type].strategie}</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-stone-700">{authorityInfo[hdResult.authority].naam}</h3>
+              <p className="text-sm text-stone-600">Profiel {hdResult.profile[0]}/{hdResult.profile[1]}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Primary, Secondary, Third */}
       <div className="grid gap-4 sm:grid-cols-3">
@@ -131,7 +174,9 @@ export default function ResultsPage({ result, answers: _answers, onReset }: Prop
 
       {/* Report */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-stone-800">Jouw uitgebreide rapport</h3>
+        <h3 className="mb-4 text-lg font-semibold text-stone-800">
+          {hdResult ? 'Jouw volledige, samengevoegde reading' : 'Jouw uitgebreide rapport'}
+        </h3>
         <ReportView sections={reportSections} />
       </div>
 
