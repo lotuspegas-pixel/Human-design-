@@ -1,10 +1,13 @@
 import type { ReportSection } from '../types';
+import { useI18n } from '../i18n/LanguageContext';
 
 interface Props {
   sections: ReportSection[];
 }
 
 export default function ReportView({ sections }: Props) {
+  const { t } = useI18n();
+
   return (
     <div className="space-y-5 print:space-y-4">
       {sections.map((section, i) => {
@@ -36,9 +39,7 @@ export default function ReportView({ sections }: Props) {
         );
       })}
       <div className="card-surface border-amber-200/70 bg-amber-50/60 p-6 text-sm text-amber-800 print:border-amber-300">
-        Dit rapport is bedoeld voor zelfinzicht en reflectie. Het is geen medische diagnose, geen
-        psychologische diagnose en geen selectie-instrument. Gebruik de uitkomst als gesprekstarter,
-        niet als definitief oordeel over jezelf of anderen.
+        {t.resultsDisclaimer}
       </div>
     </div>
   );

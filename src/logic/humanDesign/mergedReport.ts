@@ -28,13 +28,16 @@ export function generateMergedReport(
 
   const sections: ReportSection[] = [];
 
+  const volledigeNaam = [birthData.firstName, birthData.lastName].filter(Boolean).join(' ');
+  const geboorteplek = [birthData.birthPlace, birthData.birthCountry].filter(Boolean).join(', ');
+
   sections.push({
     title: `Welkom bij jouw volledige reading, ${naam}`,
     content: `Lieve ${naam},
 
-Wat je nu voor je hebt is meer dan een testuitslag. Het is een samenkomst van twee lagen: je antwoorden op de Arcana-vragenlijst, die laten zien hoe je denkt, voelt en handelt in het dagelijks leven, en een energetische laag op basis van je geboortemoment — ${formatDate(hdResult.birthDateUtc)} om ${formatTime(hdResult.birthDateUtc)} (UTC).
+Wat je nu voor je hebt is meer dan een testuitslag. Het is een samenkomst van twee lagen: je antwoorden op de Arcana-vragenlijst, die laten zien hoe je denkt, voelt en handelt in het dagelijks leven, en een energetische laag op basis van je geboortemoment — ${geboorteplek ? `in ${geboorteplek}, ` : ''}op ${formatDate(hdResult.birthDateUtc)} om ${formatTime(hdResult.birthDateUtc)} (UTC).
 
-Deze twee lagen samen vormen een rijker beeld. Waar je Arcana-profiel je bewuste voorkeuren en patronen beschrijft, kijkt je energetisch ontwerp naar een dieperliggende laag: hoe je van nature bent gebouwd om te reageren op het leven, beslissingen te nemen en energie te gebruiken.
+${volledigeNaam && volledigeNaam !== naam ? `Deze reading is gemaakt voor ${volledigeNaam}. ` : ''}Deze twee lagen samen vormen een rijker beeld. Waar je Arcana-profiel je bewuste voorkeuren en patronen beschrijft, kijkt je energetisch ontwerp naar een dieperliggende laag: hoe je van nature bent gebouwd om te reageren op het leven, beslissingen te nemen en energie te gebruiken.
 
 Neem deze reading rustig door. Er is geen goed of fout, geen hoger of lager. Het is een uitnodiging om jezelf met meer mildheid en nieuwsgierigheid te bekijken.`,
   });

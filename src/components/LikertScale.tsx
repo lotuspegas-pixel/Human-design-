@@ -1,12 +1,4 @@
-const labels = [
-  'Helemaal oneens',
-  'Oneens',
-  'Eerder oneens',
-  'Neutraal',
-  'Eerder eens',
-  'Eens',
-  'Helemaal eens',
-];
+import { useI18n } from '../i18n/LanguageContext';
 
 interface Props {
   value: number | null;
@@ -14,9 +6,11 @@ interface Props {
 }
 
 export default function LikertScale({ value, onChange }: Props) {
+  const { t } = useI18n();
+
   return (
     <div className="space-y-2">
-      {labels.map((label, i) => {
+      {t.likert.map((label, i) => {
         const score = i + 1;
         const selected = value === score;
         return (

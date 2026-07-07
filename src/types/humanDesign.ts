@@ -41,10 +41,14 @@ export type HDDefinition = 'geen' | 'enkelvoudig' | 'gesplitst' | 'drievoudig-ge
 
 export interface BirthData {
   firstName: string;
+  /** Optioneel in het type zodat oudere opgeslagen resultaten blijven werken; het formulier vereist dit veld wel. */
+  lastName?: string;
   birthDate: string; // YYYY-MM-DD
   birthTime: string; // HH:mm
   timeZone: string; // IANA zone name
-  birthPlace: string; // free text, display only
+  birthPlace: string; // vrije tekst, alleen voor weergave in de reading
+  /** Optioneel in het type zodat oudere opgeslagen resultaten blijven werken; het formulier vereist dit veld wel. */
+  birthCountry?: string;
 }
 
 export interface PlanetActivation {

@@ -74,6 +74,19 @@ Bewerk `src/data/questions.ts`. Elk vraagobject bevat:
 
 Bewerk `src/logic/report.ts` voor de rapportsecties en `src/data/archetypes.ts` voor de beschrijvingen per archetype.
 
+## Meertaligheid
+
+De app is beschikbaar in 10 talen (Engels als hoofdtaal, Nederlands als tweede,
+plus Duits, Frans, Spaans, Italiaans, Portugees, Pools, Zweeds en Turks).
+
+- `src/i18n/ui.ts` — alle interfaceteksten per taal
+- `src/i18n/questionTexts.ts` — de 64 vragen per taal
+- `src/logic/report.en.ts` + `src/logic/humanDesign/mergedReport.en.ts` — de volledig
+  uitgeschreven Engelse reading (therapeut-/coachtoon)
+- De volledig uitgeschreven reading bestaat in het Engels en Nederlands; de overige
+  acht talen tonen de Engelse reading met een korte melding.
+- Taalkeuze staat in de header en wordt onthouden in localStorage.
+
 ## Technische stack
 
 - Vite + React + TypeScript

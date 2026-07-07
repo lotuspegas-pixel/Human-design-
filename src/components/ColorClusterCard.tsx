@@ -4,9 +4,10 @@ interface Props {
   cluster: ColorCluster;
   score: number;
   isHighest: boolean;
+  highestLabel?: string;
 }
 
-export default function ColorClusterCard({ cluster, score, isHighest }: Props) {
+export default function ColorClusterCard({ cluster, score, isHighest, highestLabel = 'Hoogste' }: Props) {
   return (
     <div
       className={`card-surface p-5 transition-all ${isHighest ? 'card-surface-lift' : ''}`}
@@ -20,7 +21,7 @@ export default function ColorClusterCard({ cluster, score, isHighest }: Props) {
         <h3 className="font-display text-base font-medium text-[var(--color-ink)]">{cluster.name}</h3>
         {isHighest && (
           <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-500">
-            Hoogste
+            {highestLabel}
           </span>
         )}
       </div>

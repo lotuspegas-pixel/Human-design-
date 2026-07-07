@@ -1,8 +1,12 @@
+import { useI18n } from '../i18n/LanguageContext';
+
 interface Props {
   onStart: () => void;
 }
 
 export default function LandingPage({ onStart }: Props) {
+  const { t } = useI18n();
+
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
       <div className="mb-8 flex gap-2.5">
@@ -14,19 +18,17 @@ export default function LandingPage({ onStart }: Props) {
         Arcana Profile
       </h2>
       <p className="mb-8 max-w-lg text-lg text-[var(--color-ink-soft)]">
-        Ontdek jouw persoonlijke denkstijl, gevoelsstijl en groeipad.
+        {t.landingSubtitle}
       </p>
       <button
         onClick={onStart}
         className="rounded-xl px-8 py-3.5 text-base font-medium text-white shadow-[var(--shadow-card-lift)] transition hover:opacity-90"
         style={{ backgroundColor: 'var(--color-ink)' }}
       >
-        Start de vragenlijst
+        {t.landingStart}
       </button>
       <p className="mt-8 max-w-md text-xs text-stone-400">
-        Arcana Profile is een zelfreflectie-instrument gebaseerd op persoonlijke denkstijlen. Het is
-        geen diagnose, geen selectiemiddel en geen vervanging voor professioneel advies. Gebruik het
-        als spiegel voor je eigen ontwikkeling.
+        {t.landingDisclaimer}
       </p>
     </div>
   );

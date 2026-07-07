@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useI18n } from './i18n/LanguageContext';
 import type { Answer, ScoreResult } from './types';
 import type { BirthData, HumanDesignResult } from './types/humanDesign';
 import { calculateScores } from './logic/scoring';
@@ -28,7 +29,8 @@ export default function App() {
   const [birthData, setBirthData] = useState<BirthData | null>(null);
   const [hdResult, setHdResult] = useState<HumanDesignResult | null>(null);
   const [hdCalculating, setHdCalculating] = useState(false);
-  const [hdError, setHdError] = useState<string | null>(null);
+  const [hdError, setHdError] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const saved = loadResult();
@@ -66,7 +68,7 @@ export default function App() {
 
   const handleHdSubmit = (data: BirthData) => {
     setHdCalculating(true);
-    setHdError(null);
+    setHdError(false);
     // Berekening even async maken zodat de "bezig"-status zichtbaar is voor de gebruiker.
     setTimeout(() => {
       try {
@@ -78,7 +80,7 @@ export default function App() {
         setPage('results');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch {
-        setHdError('De berekening is niet gelukt. Controleer je geboortedatum, -tijd en tijdzone en probeer het opnieuw.');
+        setHdError(true);
         setHdCalculating(false);
       }
     }, 300);
@@ -111,7 +113,7 @@ export default function App() {
           onSubmit={handleHdSubmit}
           onBack={() => setPage('hd-intro')}
           isCalculating={hdCalculating}
-          error={hdError}
+          error={hdError ? t.calcError : null}
         />
       )}
     </AppLayout>

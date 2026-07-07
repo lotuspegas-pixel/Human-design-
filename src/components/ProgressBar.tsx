@@ -1,3 +1,5 @@
+import { useI18n } from '../i18n/LanguageContext';
+
 interface Props {
   current: number;
   total: number;
@@ -5,15 +7,15 @@ interface Props {
 }
 
 export default function ProgressBar({ current, total, estimatedMinutesLeft }: Props) {
+  const { t } = useI18n();
   const pct = Math.round((current / total) * 100);
+
   return (
     <div className="mb-6">
       <div className="mb-1 flex justify-between text-xs text-stone-500">
         <span>
-          Vraag {current} van {total}
-          {estimatedMinutesLeft !== undefined && (
-            <> · ± {estimatedMinutesLeft} {estimatedMinutesLeft === 1 ? 'minuut' : 'minuten'} resterend</>
-          )}
+          {t.questionOf(current, total)}
+          {estimatedMinutesLeft !== undefined && <> · {t.minutesLeft(estimatedMinutesLeft)}</>}
         </span>
         <span>{pct}%</span>
       </div>

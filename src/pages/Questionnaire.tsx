@@ -5,6 +5,8 @@ import QuestionCard from '../components/QuestionCard';
 import ProgressBar from '../components/ProgressBar';
 import QuestionJumpStrip from '../components/QuestionJumpStrip';
 import { saveProgress, loadProgress } from '../utils/storage';
+import { useI18n } from '../i18n/LanguageContext';
+import { getQuestionText } from '../i18n/questionTexts';
 
 interface Props {
   onComplete: (answers: Answer[]) => void;
@@ -17,6 +19,7 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
+  const { t, locale } = useI18n();
 
   useEffect(() => {
     const saved = loadProgress();
@@ -61,11 +64,7 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
     const unanswered = questions.filter((q) => !answers.some((a) => a.questionId === q.id));
     if (unanswered.length > 0) {
       const firstUnansweredIndex = questions.indexOf(unanswered[0]);
-      setRedirectNotice(
-        unanswered.length === 1
-          ? 'Je hebt nog 1 vraag open staan — we brengen je er direct naartoe.'
-          : `Je hebt nog ${unanswered.length} vragen open staan — we brengen je naar de eerste.`
-      );
+      setRedirectNotice(t.redirectNotice(unanswered.length));
       goTo(firstUnansweredIndex);
       return;
     }
@@ -102,7 +101,7 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
         </p>
       )}
       <QuestionCard
-        question={question}
+        text={getQuestionText(locale, question.id)}
         value={currentAnswer?.value ?? null}
         onChange={handleAnswer}
       />
@@ -111,38 +110,34 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
           onClick={handlePrev}
           className="rounded-lg border border-stone-300 bg-white px-5 py-2.5 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
         >
-          {currentIndex === 0 ? 'Terug' : 'Vorige'}
+          {currentIndex === 0 ? t.back : t.previous}
         </button>
         {isLast ? (
           <button
             onClick={handleFinish}
             disabled={!allAnswered}
             className={`rounded-lg px-6 py-2.5 text-sm font-medium text-white transition ${
-              allAnswered
-                ? 'bg-stone-800 hover:bg-stone-700'
-                : 'cursor-not-allowed bg-stone-300'
+              allAnswered ? 'hover:opacity-90' : 'cursor-not-allowed bg-stone-300'
             }`}
+            style={allAnswered ? { backgroundColor: 'var(--color-ink)' } : undefined}
           >
-            Bekijk resultaten
+            {t.viewResults}
           </button>
         ) : (
           <button
             onClick={handleNext}
             disabled={!currentAnswer}
             className={`rounded-lg px-6 py-2.5 text-sm font-medium text-white transition ${
-              currentAnswer
-                ? 'bg-stone-800 hover:bg-stone-700'
-                : 'cursor-not-allowed bg-stone-300'
+              currentAnswer ? 'hover:opacity-90' : 'cursor-not-allowed bg-stone-300'
             }`}
+            style={currentAnswer ? { backgroundColor: 'var(--color-ink)' } : undefined}
           >
-            Volgende
+            {t.next}
           </button>
         )}
       </div>
       {isLast && !allAnswered && (
-        <p className="mt-3 text-center text-sm text-amber-600">
-          Beantwoord alle vragen om je resultaten te bekijken.
-        </p>
+        <p className="mt-3 text-center text-sm text-amber-600">{t.answerAll}</p>
       )}
     </div>
   );
