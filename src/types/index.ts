@@ -63,11 +63,14 @@ export interface ClusterScore {
   level: ScoreLevel;
 }
 
+export type ConsistencyLevel = 'hoog' | 'gemiddeld' | 'laag';
+
 export interface ConsistencyResult {
   totalPairs: number;
   consistentPairs: number;
   score: number;
   isReliable: boolean;
+  qualitativeLevel: ConsistencyLevel;
 }
 
 export interface ScoreResult {

@@ -3,12 +3,12 @@ import type { Question } from '../types';
 export const questions: Question[] = [
   // === The Idea Finder (Ne) — Amber ===
   { id: 1, text: 'Ik krijg energie van het bedenken van nieuwe mogelijkheden.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
-  { id: 2, text: 'Als ik één idee heb, zie ik meteen drie varianten.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
+  { id: 2, text: 'Ik vind het geen probleem om ergens aan te beginnen zonder dat het plan al compleet is.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
   { id: 3, text: 'Ik vind het lastig om lang bij één plan te blijven.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
   { id: 4, text: 'Ik kies liever een bewezen aanpak dan iets nieuws.', archetypeId: 'idea-finder', reverseScored: true, colorCluster: 'amber' },
   { id: 5, text: 'Brainstormen is voor mij een van de leukste werkvormen.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber', consistencyPair: 1 },
-  { id: 6, text: 'Ik voel me onrustig als er geen ruimte is voor improvisatie.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
-  { id: 7, text: 'Ik word enthousiast van onverwachte wendingen in een project.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
+  { id: 6, text: 'Als ik over iets nadenk, borrelen er vanzelf meteen meerdere invalshoeken tegelijk op.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
+  { id: 7, text: 'Ik verdiep me graag in onderwerpen die niets met mijn dagelijkse bezigheden te maken hebben.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber' },
   { id: 8, text: 'Ik vind het leuk om verbanden te leggen tussen totaal verschillende onderwerpen.', archetypeId: 'idea-finder', reverseScored: false, colorCluster: 'amber', consistencyPair: 1 },
 
   // === The Pattern Seer (Ni) — Indigo ===
@@ -19,12 +19,12 @@ export const questions: Question[] = [
   { id: 13, text: 'Ik zoek vaak naar de onderliggende betekenis van gebeurtenissen.', archetypeId: 'pattern-seer', reverseScored: false, colorCluster: 'indigo' },
   { id: 14, text: 'Ik kan goed beschrijven waar iets naartoe beweegt.', archetypeId: 'pattern-seer', reverseScored: false, colorCluster: 'indigo' },
   { id: 15, text: 'Ik denk vaak na over hoe het verleden en de toekomst met elkaar samenhangen.', archetypeId: 'pattern-seer', reverseScored: false, colorCluster: 'indigo', consistencyPair: 2 },
-  { id: 16, text: 'Ik heb soms een helder beeld van iets dat er nog niet is.', archetypeId: 'pattern-seer', reverseScored: false, colorCluster: 'indigo' },
+  { id: 16, text: 'Ik houd vaak vast aan één helder toekomstbeeld, ook als anderen er nog aan twijfelen.', archetypeId: 'pattern-seer', reverseScored: false, colorCluster: 'indigo' },
 
   // === The Action Maker (Se) — Karmijn ===
   { id: 17, text: 'Ik reageer snel wanneer een situatie daarom vraagt.', archetypeId: 'action-maker', reverseScored: false, colorCluster: 'karmijn', consistencyPair: 3 },
   { id: 18, text: 'Ik voel me op mijn best als ik direct kan handelen.', archetypeId: 'action-maker', reverseScored: false, colorCluster: 'karmijn' },
-  { id: 19, text: 'Ik merk details op die anderen over het hoofd zien.', archetypeId: 'action-maker', reverseScored: false, colorCluster: 'karmijn' },
+  { id: 19, text: 'Ik durf te handelen, ook als ik nog niet alle informatie heb.', archetypeId: 'action-maker', reverseScored: false, colorCluster: 'karmijn' },
   { id: 20, text: 'Ik plan liever eerst uitgebreid voordat ik begin.', archetypeId: 'action-maker', reverseScored: true, colorCluster: 'karmijn' },
   { id: 21, text: 'Ik hou van situaties waarin ik ter plekke kan schakelen.', archetypeId: 'action-maker', reverseScored: false, colorCluster: 'karmijn', consistencyPair: 3 },
   { id: 22, text: 'Ik leer het meest door dingen gewoon te proberen.', archetypeId: 'action-maker', reverseScored: false, colorCluster: 'karmijn' },
@@ -46,7 +46,7 @@ export const questions: Question[] = [
   { id: 34, text: 'Ik wil bij elk project weten wat het concrete resultaat moet zijn.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn' },
   { id: 35, text: 'Ik vind het belangrijk dat taken op tijd worden afgerond.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn' },
   { id: 36, text: 'Ik werk het liefst zonder vaste planning.', archetypeId: 'plan-builder', reverseScored: true, colorCluster: 'karmijn' },
-  { id: 37, text: 'Ik orden mijn werk het liefst in prioriteiten.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn' },
+  { id: 37, text: 'Ik vind het makkelijk om een taak aan iemand anders over te laten als die het net zo goed kan doen.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn' },
   { id: 38, text: 'Ik voel me verantwoordelijk voor het eindresultaat.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn' },
   { id: 39, text: 'Ik vind het prettig als doelen helder en meetbaar zijn.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn', consistencyPair: 5 },
   { id: 40, text: 'Ik wil graag dat afspraken nagekomen worden.', archetypeId: 'plan-builder', reverseScored: false, colorCluster: 'karmijn' },

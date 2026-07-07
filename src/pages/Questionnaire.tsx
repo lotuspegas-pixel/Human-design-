@@ -3,6 +3,7 @@ import type { Answer } from '../types';
 import { questions } from '../data/questions';
 import QuestionCard from '../components/QuestionCard';
 import ProgressBar from '../components/ProgressBar';
+import QuestionJumpStrip from '../components/QuestionJumpStrip';
 import { saveProgress, loadProgress } from '../utils/storage';
 
 interface Props {
@@ -10,9 +11,12 @@ interface Props {
   onBack: () => void;
 }
 
+const SECONDS_PER_QUESTION = 8;
+
 export default function Questionnaire({ onComplete, onBack }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = loadProgress();
@@ -32,33 +36,37 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
   const currentAnswer = answers.find((a) => a.questionId === question.id);
 
   const handleAnswer = (value: number) => {
+    setRedirectNotice(null);
     setAnswers((prev) => {
       const filtered = prev.filter((a) => a.questionId !== question.id);
       return [...filtered, { questionId: question.id, value }];
     });
   };
 
+  const goTo = (index: number) => {
+    setCurrentIndex(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (currentIndex < questions.length - 1) goTo(currentIndex + 1);
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      onBack();
-    }
+    if (currentIndex > 0) goTo(currentIndex - 1);
+    else onBack();
   };
 
   const handleFinish = () => {
     const unanswered = questions.filter((q) => !answers.some((a) => a.questionId === q.id));
     if (unanswered.length > 0) {
-      const firstUnanswered = questions.indexOf(unanswered[0]);
-      setCurrentIndex(firstUnanswered);
+      const firstUnansweredIndex = questions.indexOf(unanswered[0]);
+      setRedirectNotice(
+        unanswered.length === 1
+          ? 'Je hebt nog 1 vraag open staan — we brengen je er direct naartoe.'
+          : `Je hebt nog ${unanswered.length} vragen open staan — we brengen je naar de eerste.`
+      );
+      goTo(firstUnansweredIndex);
       return;
     }
     onComplete(answers);
@@ -66,10 +74,33 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
 
   const isLast = currentIndex === questions.length - 1;
   const allAnswered = questions.every((q) => answers.some((a) => a.questionId === q.id));
+  const answeredIndexes = new Set(
+    questions.reduce<number[]>((acc, q, i) => {
+      if (answers.some((a) => a.questionId === q.id)) acc.push(i);
+      return acc;
+    }, [])
+  );
+  const remaining = questions.length - answeredIndexes.size;
+  const estimatedMinutesLeft = Math.max(1, Math.ceil((remaining * SECONDS_PER_QUESTION) / 60));
 
   return (
     <div className="mx-auto max-w-xl">
-      <ProgressBar current={currentIndex + 1} total={questions.length} />
+      <QuestionJumpStrip
+        total={questions.length}
+        currentIndex={currentIndex}
+        answeredIndexes={answeredIndexes}
+        onJump={goTo}
+      />
+      <ProgressBar
+        current={currentIndex + 1}
+        total={questions.length}
+        estimatedMinutesLeft={estimatedMinutesLeft}
+      />
+      {redirectNotice && (
+        <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-700">
+          {redirectNotice}
+        </p>
+      )}
       <QuestionCard
         question={question}
         value={currentAnswer?.value ?? null}

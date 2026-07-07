@@ -10,6 +10,21 @@ function sorted(result: ScoreResult): ArchetypeScore[] {
   return [...result.archetypeScores].sort((a, b) => b.score100 - a.score100);
 }
 
+/**
+ * Geeft een graduele intensiteitsomschrijving terug op basis van een 0-100 score.
+ * Zeven gradaties in plaats van 3-4 harde drempels, zodat bijvoorbeeld 61 en 99 punten
+ * niet in identieke tekst uitmonden.
+ */
+function gradation(score100: number): string {
+  if (score100 < 15) return 'nauwelijks';
+  if (score100 < 30) return 'in beperkte mate';
+  if (score100 < 45) return 'in enige mate';
+  if (score100 < 60) return 'in redelijke mate';
+  if (score100 < 75) return 'in behoorlijke mate';
+  if (score100 < 90) return 'in sterke mate';
+  return 'in uitgesproken sterke mate';
+}
+
 export function generateReport(result: ScoreResult): ReportSection[] {
   const primary = getArchetype(result.highestArchetype);
   const secondary = getArchetype(result.secondArchetype);
@@ -48,8 +63,10 @@ Dit rapport bevat de volgende onderdelen:
   // ─── 2. BETROUWBAARHEID ───
   const cons = result.consistency;
   let consText = `Je antwoorden zijn getoetst op interne consistentie. Van de ${cons.totalPairs} controleparen in de vragenlijst waren ${cons.consistentPairs} paren consistent (${cons.score}%).`;
-  if (cons.isReliable) {
+  if (cons.qualitativeLevel === 'hoog') {
     consText += '\n\nDit wijst op een betrouwbaar profiel: je hebt de stellingen overwogen en consequent beantwoord. De uitkomsten geven een helder beeld van je huidige voorkeuren.';
+  } else if (cons.qualitativeLevel === 'gemiddeld') {
+    consText += '\n\nJe consistentiescore is gemiddeld. Op de meeste vlakken beantwoordde je vergelijkbare stellingen op eenzelfde manier, maar bij een deel zat er meer variatie in dan verwacht. De uitkomsten zijn bruikbaar als reflectie; kijk bij het lezen of ze herkenbaar voelen.';
   } else {
     consText += '\n\nJe consistentiescore is lager dan gemiddeld. Dit kan betekenen dat je in een periode van verandering zit, dat sommige stellingen anders op je overkwamen, of dat je snel door de vragenlijst bent gegaan. De uitkomsten zijn nog steeds bruikbaar als reflectie, maar neem ze met extra aandacht door en kijk of ze herkenbaar voelen.';
   }
@@ -348,7 +365,7 @@ Minst aanwezig: ${lowest.name} (${lowest.jungFunction}) — ${Math.round(lowestS
 Kleurcluster: ${mainCluster.name} (${mainCluster.meaning.toLowerCase()})
 ${result.isBlendProfile ? 'Profieltype: Blend (twee stijlen liggen dicht bij elkaar)' : 'Profieltype: Dominant (één duidelijk sterkste stijl)'}
 ${result.isBalancedProfile ? 'Kleurbalans: Gebalanceerd (alle clusters dicht bij elkaar)' : 'Kleurbalans: Gedifferentieerd (duidelijke voorkeursclusters)'}
-Consistentie: ${cons.score}%${cons.isReliable ? ' (betrouwbaar)' : ' (neem uitkomsten met extra reflectie door)'}
+Consistentie: ${cons.score}% (${cons.qualitativeLevel})
 
 KERNKRACHT
 ${primary.strength} Aangevuld met: ${secondary.strength.toLowerCase()}
@@ -427,37 +444,50 @@ function getDenkstijlText(result: ScoreResult): string {
   const parts: string[] = [];
 
   parts.push('ANALYTISCH VERMOGEN');
-  if (ti.score100 >= 70) parts.push('Je hebt een sterk analytisch vermogen. Je zoekt naar logische consistentie en hebt er plezier in om complexe vraagstukken te ontleden. Je merkt snel wanneer iets niet klopt en stelt scherpe vragen. Deze scherpte is een kracht, maar kan soms intimiderend overkomen op anderen.');
-  else if (ti.score100 >= 50) parts.push('Je hebt een gezonde dosis analytisch denken in je profiel. Je kunt logisch redeneren wanneer de situatie daarom vraagt, maar het is niet per se je eerste reflex. Je schakelt tussen denken en voelen op basis van de context.');
-  else parts.push('Analytisch denken is niet je eerste neiging. Je vertrouwt meer op andere bronnen — zoals ervaring, gevoel of intuïtie — dan op systematische analyse. Dit kan een kracht zijn in situaties die om menselijkheid en pragmatisme vragen.');
+  parts.push(`Analytisch denken is ${gradation(ti.score100)} aanwezig in je profiel (${Math.round(ti.score100)} punten).`);
+  parts.push(
+    ti.score100 >= 50
+      ? 'Je zoekt naar logische consistentie en ontleedt vraagstukken graag tot in de kern. Je merkt snel wanneer een redenering niet klopt. Deze scherpte is een kracht, maar kan soms intimiderend overkomen op anderen als je hem ongefilterd deelt.'
+      : 'Je vertrouwt meer op andere bronnen — zoals ervaring, gevoel of intuïtie — dan op systematische analyse. Dit kan een kracht zijn in situaties die om menselijkheid en pragmatisme vragen, eerder dan om koele logica.'
+  );
 
   parts.push('\nSTRATEGISCH DENKEN');
-  if (ni.score100 >= 70) parts.push('Je hebt een sterk strategisch en toekomstgericht denkvermogen. Je ziet patronen en richtingen die anderen nog niet opmerken. Je denkt graag na over de lange termijn en hebt een goed gevoel voor waar iets naartoe beweegt. Je kunt soms gefrustreerd raken als anderen niet dezelfde patronen herkennen.');
-  else if (ni.score100 >= 50) parts.push('Je hebt een zekere mate van strategisch denken. Je kunt vooruitkijken wanneer dat nodig is, maar richt je ook graag op het heden. Je wisselt af tussen langetermijndenken en kortetermijnhandelen.');
-  else parts.push('Je richt je liever op wat nu speelt dan op toekomstige scenario\'s. Dit maakt je praktisch en grounded, maar het kan helpen om af en toe bewust de langere termijn in je overwegingen mee te nemen.');
+  parts.push(`Strategisch en toekomstgericht denken is ${gradation(ni.score100)} aanwezig (${Math.round(ni.score100)} punten).`);
+  parts.push(
+    ni.score100 >= 50
+      ? 'Je ziet patronen en richtingen die anderen nog niet opmerken en denkt graag na over de lange termijn. Je kunt soms gefrustreerd raken als anderen niet dezelfde patronen herkennen.'
+      : 'Je richt je liever op wat nu speelt dan op toekomstige scenario\'s. Dit maakt je praktisch en grounded, maar het kan helpen om af en toe bewust de langere termijn in je overwegingen mee te nemen.'
+  );
 
   parts.push('\nCREATIEF DENKEN');
-  if (ne.score100 >= 70) parts.push('Je denkt sterk divergent: je ziet al snel meerdere opties en mogelijkheden waar anderen er maar één zien. Je maakt makkelijk verbanden tussen schijnbaar ongerelateerde onderwerpen. Dit maakt je creatief en innovatief, maar kan soms leiden tot keuzestress of te veel opties tegelijk.');
-  else if (ne.score100 >= 50) parts.push('Je hebt een gezond creatief denkvermogen. Je kunt buiten de gebaande paden denken wanneer dat nodig is, maar zoekt ook graag structuur en houvast.');
-  else parts.push('Je denkt liever convergent dan divergent: je zoekt naar de beste oplossing in plaats van tien mogelijke oplossingen. Dit maakt je focus sterk en efficiënt.');
+  parts.push(`Divergent, mogelijkheden-zoekend denken is ${gradation(ne.score100)} aanwezig (${Math.round(ne.score100)} punten).`);
+  parts.push(
+    ne.score100 >= 50
+      ? 'Je ziet al snel meerdere opties waar anderen er maar één zien en maakt makkelijk verbanden tussen schijnbaar ongerelateerde onderwerpen. Dit maakt je creatief, maar kan leiden tot keuzestress of te veel opties tegelijk.'
+      : 'Je zoekt liever naar de ene beste oplossing dan naar tien mogelijke oplossingen. Dit maakt je focus sterk en efficiënt, met minder ruimte voor open verkenning.'
+  );
 
   parts.push('\nGESTRUCTUREERD DENKEN');
-  if (te.score100 >= 70) parts.push('Je denkt graag in structuur, prioriteiten en meetbare resultaten. Je wilt weten waar je naartoe werkt en hoe je voortgang kunt meten. Dit maakt je effectief en resultaatgericht, maar kan soms leiden tot een te sterke focus op output ten koste van het proces.');
-  else if (te.score100 >= 50) parts.push('Je kunt gestructureerd denken wanneer de situatie daarom vraagt. Je hebt een balans tussen planmatig en flexibel werken.');
-  else parts.push('Strakke structuur en planning zijn niet je eerste drijfveer. Je werkt liever flexibel en past je aan op basis van wat zich voordoet.');
+  parts.push(`Denken in structuur, prioriteiten en meetbare resultaten is ${gradation(te.score100)} aanwezig (${Math.round(te.score100)} punten).`);
+  parts.push(
+    te.score100 >= 50
+      ? 'Je wilt weten waar je naartoe werkt en hoe je voortgang kunt meten. Dit maakt je effectief en resultaatgericht, maar kan leiden tot een te sterke focus op output ten koste van het proces.'
+      : 'Strakke structuur en planning zijn niet je eerste drijfveer. Je werkt liever flexibel en past je aan op basis van wat zich voordoet.'
+  );
 
   return parts.join('\n');
 }
 
 function getCommunicatieText(result: ScoreResult): string {
-  const primary = getArchetypeDetail(result.highestArchetype);
-  const secondary = getArchetypeDetail(result.secondArchetype);
   const fe = score(result, 'people-helper');
   const fi = score(result, 'heart-listener');
   const ti = score(result, 'clear-thinker');
   const te = score(result, 'plan-builder');
+  const ne = score(result, 'idea-finder');
+  const se = score(result, 'action-maker');
 
-  let text = `JOUW COMMUNICATIESTIJL\n${primary.communicatie}\n\nAls ${getArchetype(result.secondArchetype).name} ook meespeelt:\n${secondary.communicatie}\n\n`;
+  let text = 'DE ONDERTOON VAN JE COMMUNICATIE\n';
+  text += `Gerichtheid op de ander is ${gradation(fe.score100)} aanwezig (${Math.round(fe.score100)}); trouw aan je eigen waarden in wat je zegt is ${gradation(fi.score100)} aanwezig (${Math.round(fi.score100)}); analytische precisie is ${gradation(ti.score100)} aanwezig (${Math.round(ti.score100)}).\n\n`;
 
   text += 'COMMUNICATIE IN DE PRAKTIJK\n';
 
@@ -471,8 +501,12 @@ function getCommunicatieText(result: ScoreResult): string {
     text += 'Je communiceert precies en analytisch. Je kiest je woorden zorgvuldig en onderbouwt je standpunten graag met logica. Let erop dat je niet te afstandelijk overkomt en dat je je analyse vertaalt naar begrijpelijke taal.';
   } else if (te.score100 >= 60) {
     text += 'Je communiceert resultaatgericht en efficiënt. Je wilt snel tot de kern komen en concrete afspraken maken. Let erop dat je ruimte laat voor de inbreng van anderen en dat je niet te snel naar oplossingen gaat.';
+  } else if (ne.score100 >= 60) {
+    text += 'Je communiceert associatief en energiek, met veel zijsprongen en nieuwe invalshoeken. Dit werkt aanstekelijk, maar niet iedereen kan je tempo volgen. Samenvatten helpt om je boodschap te laten landen.';
+  } else if (se.score100 >= 60) {
+    text += 'Je communiceert kort en direct, gericht op de situatie van het moment. Dit werkt goed onder druk, maar kan haastig overkomen als er juist ruimte voor nuance nodig is.';
   } else {
-    text += 'Je communicatiestijl is flexibel en past zich aan aan de situatie. Je hebt geen sterk uitgesproken voorkeur, wat je in staat stelt om in verschillende contexten effectief te communiceren.';
+    text += 'Je communicatiestijl is flexibel en past zich aan de situatie aan. Je hebt geen sterk uitgesproken voorkeur, wat je in staat stelt om in verschillende contexten effectief te communiceren.';
   }
 
   text += '\n\nTIPS VOOR EFFECTIEVERE COMMUNICATIE\n';
@@ -519,19 +553,17 @@ function getMensenText(result: ScoreResult): string {
   const parts: string[] = [];
 
   parts.push('SOCIALE GERICHTHEID');
-  if (fe.score100 >= 70) {
-    parts.push('Je hebt een sterk gevoel voor groepsdynamiek. Je merkt snel wat anderen nodig hebben en stemt je communicatie daarop af. Je bent een natuurlijke verbinder die harmonie waardeert. Het risico is dat je te veel van jezelf weggeeft om de vrede te bewaren.');
-  } else if (fe.score100 >= 45) {
-    parts.push('Je bent je bewust van de sfeer in een groep, zonder dat dit je eerste focus is. Je kunt schakelen tussen je eigen agenda en de behoeften van de groep. Je hebt een gezonde balans tussen betrokkenheid en afstand.');
+  parts.push(`Gevoeligheid voor groepsdynamiek is ${gradation(fe.score100)} aanwezig (${Math.round(fe.score100)} punten).`);
+  if (fe.score100 >= 50) {
+    parts.push('Je merkt snel wat anderen nodig hebben en stemt je communicatie daarop af. Je bent een natuurlijke verbinder die harmonie waardeert. Het risico is dat je te veel van jezelf weggeeft om de vrede te bewaren.');
   } else {
     parts.push('Je richt je minder op de groepsdynamiek en meer op andere aspecten van een situatie. Dit kan een kracht zijn: je laat je niet snel meeslepen door groepsdruk en houdt je eigen koers. In teamverband kan het helpen om af en toe bewust te checken hoe het met je collega\'s gaat.');
   }
 
   parts.push('\nINNERLIJK KOMPAS');
-  if (fi.score100 >= 70) {
-    parts.push('Je volgt een sterk innerlijk kompas. Authenticiteit en persoonlijke waarden zijn leidend in hoe je met anderen omgaat. Je hebt een helder beeld van wat je belangrijk vindt en laat je niet makkelijk van dat pad afbrengen. De uitdaging is om je innerlijke wereld ook te delen met anderen, zodat ze je beter begrijpen.');
-  } else if (fi.score100 >= 45) {
-    parts.push('Je eigen waarden spelen een rol, maar je weegt ze af tegen de situatie. Je kunt pragmatisch zijn zonder je integriteit te verliezen. Je hebt een gezonde balans tussen trouw aan jezelf en aanpassing aan de context.');
+  parts.push(`Sturing vanuit persoonlijke waarden en authenticiteit is ${gradation(fi.score100)} aanwezig (${Math.round(fi.score100)} punten).`);
+  if (fi.score100 >= 50) {
+    parts.push('Authenticiteit en persoonlijke waarden zijn leidend in hoe je met anderen omgaat. Je hebt een helder beeld van wat je belangrijk vindt en laat je niet makkelijk van dat pad afbrengen. De uitdaging is om je innerlijke wereld ook te delen met anderen, zodat ze je beter begrijpen.');
   } else {
     parts.push('Je bent flexibel in je waardenbeleving en past je makkelijker aan de context aan. Dit maakt je wendbaar en sociaal vaardig. Het kan helpen om af en toe stil te staan bij wat je écht belangrijk vindt, los van wat de situatie vraagt.');
   }
@@ -563,14 +595,25 @@ function getKeuzeText(result: ScoreResult): string {
   const parts: string[] = [];
 
   parts.push('JOUW BESLUITVORMINGSSTIJL');
-  if (te.score100 >= 65) {
-    parts.push('Je maakt keuzes het liefst op basis van structuur en heldere prioriteiten. Je wilt weten welke stap het meeste resultaat oplevert. Je bent besluitvaardig en hebt weinig geduld voor besluiteloosheid. Let erop dat je niet te snel beslist ten koste van draagvlak.');
-  } else if (ti.score100 >= 65) {
-    parts.push('Je maakt keuzes op basis van logische analyse. Je weegt argumenten, toetst aannames en zoekt naar de meest consistente optie. Je neemt de tijd om goed na te denken. Let erop dat je niet vastloopt in overanalyse.');
-  } else if (fi.score100 >= 65) {
-    parts.push('Je maakt keuzes op basis van je waarden en innerlijk gevoel. Je checkt of een optie past bij wie je bent en waar je voor staat. Dit geeft je besluiten diepgang en overtuiging. Let erop dat je ook rationele argumenten meeweegt.');
-  } else if (se.score100 >= 65) {
-    parts.push('Je neemt graag snel beslissingen en vertrouwt op je directe waarneming van de situatie. Je voelt aan wat het moment vraagt en handelt daarnaar. Let erop dat je bij belangrijke beslissingen voldoende bedenktijd neemt.');
+  const decisionDrivers = [
+    { s: te, label: 'structuur en heldere prioriteiten' },
+    { s: ti, label: 'logische analyse' },
+    { s: fi, label: 'waarden en innerlijk gevoel' },
+    { s: se, label: 'directe waarneming van de situatie' },
+  ].sort((a, b) => b.s.score100 - a.s.score100);
+  const topDriver = decisionDrivers[0];
+
+  if (topDriver.s.score100 >= 50) {
+    parts.push(`Je besluitvorming leunt ${gradation(topDriver.s.score100)} op ${topDriver.label} (${Math.round(topDriver.s.score100)} punten).`);
+    if (topDriver === decisionDrivers.find((d) => d.s === te)) {
+      parts.push('Je wilt weten welke stap het meeste resultaat oplevert en bent besluitvaardig. Let erop dat je niet te snel beslist ten koste van draagvlak.');
+    } else if (topDriver.label.includes('logische')) {
+      parts.push('Je weegt argumenten, toetst aannames en zoekt naar de meest consistente optie. Let erop dat je niet vastloopt in overanalyse.');
+    } else if (topDriver.label.includes('waarden')) {
+      parts.push('Je checkt of een optie past bij wie je bent en waar je voor staat. Dit geeft je besluiten diepgang. Let erop dat je ook rationele argumenten meeweegt.');
+    } else {
+      parts.push('Je voelt aan wat het moment vraagt en handelt daarnaar. Let erop dat je bij belangrijke beslissingen voldoende bedenktijd neemt.');
+    }
   } else {
     parts.push('Je keuzeproces is flexibel en wordt beïnvloed door de context van het moment. Je hebt geen sterk uitgesproken besluitvormingsstijl, wat je in staat stelt om per situatie te kiezen wat past.');
   }
@@ -782,11 +825,7 @@ function getClusterVerdieping(result: ScoreResult): string {
     const s1 = score(result, a1);
     const s2 = score(result, a2);
 
-    let levelText = '';
-    if (cs.score100 >= 70) levelText = 'Dit cluster is sterk aanwezig in je profiel.';
-    else if (cs.score100 >= 50) levelText = 'Dit cluster speelt een duidelijke rol in je profiel.';
-    else if (cs.score100 >= 30) levelText = 'Dit cluster is gematigd aanwezig.';
-    else levelText = 'Dit cluster is minder dominant in je profiel.';
+    const levelText = `Dit cluster is ${gradation(cs.score100)} aanwezig in je profiel.`;
 
     parts.push(`${cluster.name.toUpperCase()} (${Math.round(cs.score100)} punten)
 ${cluster.meaning} ${levelText}
@@ -834,11 +873,9 @@ function getAllArchetypesText(result: ScoreResult): string {
     const a = getArchetype(s.archetypeId);
     const rank = i === 0 ? '(Hoofdarchetype)' : i === 1 ? '(Tweede archetype)' : i === 2 ? '(Derde archetype)' : i === all.length - 1 ? '(Minst aanwezig)' : '';
 
-    let interpretation = '';
-    if (s.score100 >= 75) interpretation = 'Deze stijl is zeer sterk aanwezig in je profiel. Je valt hier automatisch op terug en het kleurt een groot deel van je gedrag.';
-    else if (s.score100 >= 55) interpretation = 'Deze stijl is duidelijk aanwezig. Je kunt deze kwaliteit effectief inzetten wanneer de situatie daarom vraagt.';
-    else if (s.score100 >= 35) interpretation = 'Deze stijl is gematigd aanwezig. Je hebt er toegang toe, maar het is niet je eerste neiging.';
-    else interpretation = 'Deze stijl is minder sterk aanwezig. Je valt hier niet spontaan op terug. Dit is geen zwakte, maar een indicatie dat andere stijlen dichter bij je staan.';
+    const interpretation = s.score100 >= 50
+      ? `Deze stijl is ${gradation(s.score100)} aanwezig in je profiel. Je kunt deze kwaliteit effectief inzetten, en hoe hoger de score, hoe automatischer je erop terugvalt.`
+      : `Deze stijl is ${gradation(s.score100)} aanwezig. Dit is geen zwakte, maar een indicatie dat andere stijlen dichter bij je staan en je hier minder spontaan op terugvalt.`;
 
     const sd = s.standardDeviation;
     let sdText = '';

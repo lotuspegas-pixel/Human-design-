@@ -78,7 +78,10 @@ Dit profiel beschrijft een dubbele laag in hoe je je door het leven beweegt: de 
 DEFINITIE: ${definition.naam}
 ${definition.thema}
 
-Dit zegt iets over hoe je energie intern is georganiseerd — of die als één geheel aanvoelt, of eerder als delen die soms om aanvulling van buitenaf vragen. Beide zijn volkomen natuurlijk; het is geen kwestie van compleet of incompleet zijn.`,
+Dit zegt iets over hoe je energie intern is georganiseerd — of die als één geheel aanvoelt, of eerder als delen die soms om aanvulling van buitenaf vragen. Beide zijn volkomen natuurlijk; het is geen kwestie van compleet of incompleet zijn.
+
+EEN KLEINE KANTTEKENING BIJ DE BEREKENING
+Voor de maansknopen gebruiken we een astronomisch gemiddeld model, de gangbare methode voor dit type berekening. In een klein aantal gevallen — wanneer een positie vlak bij een poortgrens valt — kan dit leiden tot een net iets andere poort dan een berekening met de exacte "ware" knoop. Dit raakt hooguit een enkel detail, niet de kern van deze reading.`,
   });
 
   sections.push({

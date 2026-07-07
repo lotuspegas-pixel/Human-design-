@@ -51,13 +51,20 @@ function determineType(activeGates: Set<number>, definedCenters: CenterId[]): HD
   return 'projector';
 }
 
-function determineAuthority(definedCenters: CenterId[], type: HDType): HDAuthority {
+function determineAuthority(definedCenters: CenterId[], definedChannels: DefinedChannel[], type: HDType): HDAuthority {
   if (type === 'reflector') return 'lunar';
   if (definedCenters.includes('solar-plexus')) return 'emotional';
   if (definedCenters.includes('sacral')) return 'sacral';
   if (definedCenters.includes('spleen')) return 'splenic';
-  if (definedCenters.includes('heart')) return 'ego';
-  if (definedCenters.includes('g-center')) return 'self-projected';
+
+  // Ego- en zelf-geprojecteerde autoriteit vereisen in de echte Human Design-regels dat het
+  // hart- resp. G-centrum ook daadwerkelijk via een kanaal met het keelcentrum verbonden is —
+  // niet slechts dat het centrum op zichzelf gedefinieerd is.
+  const centersConnected = (a: CenterId, b: CenterId) =>
+    definedChannels.some((c) => c.centers.includes(a) && c.centers.includes(b));
+
+  if (definedCenters.includes('heart') && centersConnected('heart', 'throat')) return 'ego';
+  if (definedCenters.includes('g-center') && centersConnected('g-center', 'throat')) return 'self-projected';
   return 'mental';
 }
 
@@ -116,7 +123,7 @@ export function calculateHumanDesign(birthData: BirthData): HumanDesignResult {
 
   const definedCenters = determineDefinedCenters(definedChannels);
   const type = determineType(activeGatesSet, definedCenters);
-  const authority = determineAuthority(definedCenters, type);
+  const authority = determineAuthority(definedCenters, definedChannels, type);
   const definition = determineDefinition(definedCenters, definedChannels);
 
   const personalitySunLine = getSunLine(personalityActivations);

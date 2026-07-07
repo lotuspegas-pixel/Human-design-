@@ -4,7 +4,9 @@ import { colorClusters } from '../data/colorClusters';
 
 function getEffectiveScore(answer: Answer): number {
   const question = questions.find((q) => q.id === answer.questionId);
-  if (!question) return 0;
+  if (!question) {
+    throw new Error(`Onbekende vraag-ID: ${answer.questionId}. Dit wijst op een datafout in de vragenlijst.`);
+  }
   return question.reverseScored ? 8 - answer.value : answer.value;
 }
 
@@ -38,14 +40,17 @@ function calculateConsistency(answers: Answer[]): ConsistencyResult {
   for (const [, scores] of pairMap) {
     if (scores.length === 2) {
       totalPairs++;
-      if (Math.abs(scores[0] - scores[1]) <= 2) {
+      // Op een 1-7 schaal telt een verschil van maximaal 1 punt als consistent (~17% van de schaalbreedte).
+      if (Math.abs(scores[0] - scores[1]) <= 1) {
         consistentPairs++;
       }
     }
   }
 
   const score = totalPairs > 0 ? Math.round((consistentPairs / totalPairs) * 100) : 100;
-  return { totalPairs, consistentPairs, score, isReliable: score >= 50 };
+  const qualitativeLevel: ScoreResult['consistency']['qualitativeLevel'] =
+    score >= 75 ? 'hoog' : score >= 50 ? 'gemiddeld' : 'laag';
+  return { totalPairs, consistentPairs, score, isReliable: score >= 75, qualitativeLevel };
 }
 
 export function calculateScores(answers: Answer[]): ScoreResult {

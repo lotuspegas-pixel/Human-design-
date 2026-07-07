@@ -44,15 +44,19 @@ export default function ResultsPage({ result, answers: _answers, onReset, hdResu
 
       {/* Consistency indicator */}
       <div className={`rounded-xl border p-4 text-sm ${
-        result.consistency.isReliable
+        result.consistency.qualitativeLevel === 'hoog'
           ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-          : 'border-amber-200 bg-amber-50 text-amber-700'
+          : result.consistency.qualitativeLevel === 'gemiddeld'
+            ? 'border-amber-200 bg-amber-50 text-amber-700'
+            : 'border-red-200 bg-red-50 text-red-700'
       }`}>
         <span className="font-medium">Betrouwbaarheid: </span>
         {result.consistency.score}% consistentie
-        {result.consistency.isReliable
+        {result.consistency.qualitativeLevel === 'hoog'
           ? ' — je antwoorden zijn consequent en betrouwbaar.'
-          : ' — overweeg het rapport met extra reflectie door te nemen.'}
+          : result.consistency.qualitativeLevel === 'gemiddeld'
+            ? ' — over het algemeen consequent, met wat ruimte voor nuance.'
+            : ' — overweeg het rapport met extra reflectie door te nemen.'}
       </div>
 
       {/* Human Design CTA or summary */}
