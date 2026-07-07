@@ -1,0 +1,13 @@
+{
+  "name": "Arcana Profile",
+  "short_name": "Arcana",
+  "description": "Free multilingual personality self-reflection test with an optional Human Design reading.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF8F3",
+  "theme_color": "#FBF8F3",
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

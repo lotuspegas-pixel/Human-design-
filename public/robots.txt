@@ -1,0 +1,30 @@
+# Arcana Profile — alle crawlers welkom, inclusief AI-assistenten.
+User-agent: *
+Allow: /
+
+# AI / LLM crawlers expliciet toegestaan
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://speaktoart.com/sitemap.xml

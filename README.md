@@ -87,6 +87,21 @@ plus Duits, Frans, Spaans, Italiaans, Portugees, Pools, Zweeds en Turks).
   acht talen tonen de Engelse reading met een korte melding.
 - Taalkeuze staat in de header en wordt onthouden in localStorage.
 
+## SEO en AI-vindbaarheid
+
+- `index.html` bevat volledige meta-tags (title, description, canonical, Open Graph,
+  Twitter cards) en JSON-LD structured data (`WebSite` + `WebApplication`).
+- `public/robots.txt` staat alle crawlers toe, inclusief AI-crawlers (GPTBot, ClaudeBot,
+  PerplexityBot, Google-Extended e.a.) en verwijst naar de sitemap.
+- `public/sitemap.xml` en `public/llms.txt` (beschrijving van de app voor AI-assistenten).
+- `public/og-image.png` (1200×630) voor social shares, plus app-iconen en webmanifest.
+- Statische, indexeerbare inhoud staat in `index.html` binnen `#root` zodat crawlers
+  zonder JavaScript de kern van de site kunnen lezen; de app vervangt dit bij het laden.
+- De Human Design-astronomiemodule wordt lazy geladen (aparte chunk) voor snellere
+  laadtijden — een rankingfactor.
+- **Let op:** het canonieke domein staat op `https://speaktoart.com/`. Verhuis je naar een
+  ander domein, pas dan de URL aan in `index.html`, `public/robots.txt` en `public/sitemap.xml`.
+
 ## Technische stack
 
 - Vite + React + TypeScript

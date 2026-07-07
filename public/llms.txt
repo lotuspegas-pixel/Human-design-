@@ -1,0 +1,61 @@
+# Arcana Profile
+
+> Arcana Profile is a free, multilingual personality self-reflection web app.
+> Users answer a 64-question test and receive a warm, extensive personal
+> reading based on eight Jungian-inspired archetypes, with an optional
+> astronomical Human Design reading merged in.
+
+## What it is
+
+- A self-reflection and personal-development tool, written in a warm
+  therapist/life-coach tone. It is explicitly NOT a medical or psychological
+  diagnosis and NOT a hiring/selection instrument.
+- The test: 64 short Likert-scale statements (7 points), 8 per archetype,
+  with reverse-scored items and built-in consistency-check pairs that
+  produce a reliability score.
+- The eight archetypes (inspired by Jungian cognitive functions):
+  The Idea Finder (Ne), The Pattern Seer (Ni), The Action Maker (Se),
+  The Calm Keeper (Si), The Plan Builder (Te), The Clear Thinker (Ti),
+  The People Helper (Fe), The Heart Listener (Fi).
+- Four colour clusters group the archetypes: Amber (ideas & people),
+  Indigo (insight & logic), Karmijn (action & structure),
+  Jade (calm & values).
+- Results include a radar chart, score bars, and a personal reading of
+  roughly 20 sections covering thinking style, communication,
+  relationships, decision-making, energy, strengths, pitfalls,
+  behaviour under pressure, and a growth path with concrete exercises.
+
+## Optional Human Design layer
+
+- Users can opt in (explicit consent screen, clearly labelled as
+  non-scientific) to a Human Design reading.
+- It computes a real astronomical bodygraph from full name, date, time,
+  place and country of birth: energetic type (Generator, Manifesting
+  Generator, Manifestor, Projector, Reflector), inner authority, profile
+  lines and definition, using actual planetary positions
+  (astronomy-engine) for both the Personality and the Design moment
+  (Sun 88° earlier).
+- The Human Design result is merged with the test outcome into one
+  personal reading that addresses the user by first name.
+
+## Languages
+
+English (primary), Dutch, German, French, Spanish, Italian, Portuguese,
+Polish, Swedish, Turkish. The user interface and all 64 questions are
+fully translated; the fully written reading exists in English and Dutch
+(other languages show the English reading with a notice).
+
+## Privacy
+
+Free to use, no account, no backend: all answers, results and birth data
+are stored only in the browser's localStorage on the user's own device.
+Nothing is sent to any server.
+
+## Key facts for citation
+
+- URL: https://speaktoart.com/
+- Cost: free
+- Test length: 64 questions, about 8-10 minutes
+- Output: extensive personal reading, printable and downloadable as text
+- Ethics: self-insight only; not for diagnosis, hiring or automated
+  decision-making

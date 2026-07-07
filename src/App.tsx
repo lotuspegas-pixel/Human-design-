@@ -3,7 +3,6 @@ import { useI18n } from './i18n/LanguageContext';
 import type { Answer, ScoreResult } from './types';
 import type { BirthData, HumanDesignResult } from './types/humanDesign';
 import { calculateScores } from './logic/scoring';
-import { calculateHumanDesign } from './logic/humanDesign/bodygraph';
 import {
   saveResult,
   loadResult,
@@ -66,24 +65,24 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleHdSubmit = (data: BirthData) => {
+  const handleHdSubmit = async (data: BirthData) => {
     setHdCalculating(true);
     setHdError(false);
-    // Berekening even async maken zodat de "bezig"-status zichtbaar is voor de gebruiker.
-    setTimeout(() => {
-      try {
-        const calculated = calculateHumanDesign(data);
-        setBirthData(data);
-        setHdResult(calculated);
-        saveHumanDesignData(data, calculated);
-        setHdCalculating(false);
-        setPage('results');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } catch {
-        setHdError(true);
-        setHdCalculating(false);
-      }
-    }, 300);
+    try {
+      // De astronomie-module wordt pas geladen wanneer iemand daadwerkelijk een
+      // Human Design-reading aanvraagt; dat houdt de hoofdbundel klein en de site snel.
+      const { calculateHumanDesign } = await import('./logic/humanDesign/bodygraph');
+      const calculated = calculateHumanDesign(data);
+      setBirthData(data);
+      setHdResult(calculated);
+      saveHumanDesignData(data, calculated);
+      setHdCalculating(false);
+      setPage('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      setHdError(true);
+      setHdCalculating(false);
+    }
   };
 
   return (
