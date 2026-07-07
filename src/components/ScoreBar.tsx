@@ -6,15 +6,18 @@ interface Props {
 
 export default function ScoreBar({ label, score, color }: Props) {
   return (
-    <div className="mb-3">
-      <div className="mb-1 flex justify-between text-sm">
-        <span className="font-medium text-stone-700">{label}</span>
-        <span className="text-stone-500">{Math.round(score)}</span>
+    <div className="mb-4">
+      <div className="mb-1.5 flex items-baseline justify-between">
+        <span className="text-sm font-medium text-[var(--color-ink)]">{label}</span>
+        <span className="font-display text-lg text-[var(--color-ink)]">{Math.round(score)}</span>
       </div>
-      <div className="h-3 w-full overflow-hidden rounded-full bg-stone-100">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-stone-100">
         <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${Math.max(score, 2)}%`, backgroundColor: color }}
+          className="h-full rounded-full transition-all duration-700 ease-out"
+          style={{
+            width: `${Math.max(score, 2)}%`,
+            background: `linear-gradient(90deg, ${color}99, ${color})`,
+          }}
         />
       </div>
     </div>

@@ -30,9 +30,6 @@ export interface ColorCluster {
   archetypes: [ArchetypeId, ArchetypeId];
   meaning: string;
   color: string;
-  bgClass: string;
-  textClass: string;
-  accentClass: string;
 }
 
 export interface Question {

@@ -10,10 +10,10 @@ export default function HumanDesignIntro({ onAccept, onSkip }: Props) {
 
   return (
     <div className="mx-auto max-w-xl">
-      <h2 className="mb-2 text-2xl font-bold text-stone-800">Verdiep je reading</h2>
-      <p className="mb-6 text-stone-500">Een extra, optionele laag op basis van je geboortemoment</p>
+      <h2 className="mb-2 font-display text-2xl font-medium text-[var(--color-ink)]">Verdiep je reading</h2>
+      <p className="mb-6 text-[var(--color-ink-soft)]">Een extra, optionele laag op basis van je geboortemoment</p>
 
-      <div className="mb-6 space-y-4 rounded-xl border border-stone-200 bg-white p-6 text-sm leading-relaxed text-stone-600 shadow-sm">
+      <div className="card-surface mb-6 space-y-4 p-6 text-sm leading-relaxed text-[var(--color-ink-soft)]">
         <p>
           Naast de vragenlijst kun je je reading verdiepen met <strong>Human Design</strong> — een
           systeem dat je geboortedatum, -tijd en -plaats combineert met astronomische berekeningen
@@ -36,14 +36,14 @@ export default function HumanDesignIntro({ onAccept, onSkip }: Props) {
         </p>
       </div>
 
-      <label className="mb-8 flex cursor-pointer items-start gap-3 rounded-lg border border-stone-200 bg-white p-4 transition hover:bg-stone-50">
+      <label className="card-surface mb-8 flex cursor-pointer items-start gap-3 p-4 transition hover:bg-stone-50">
         <input
           type="checkbox"
           checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}
           className="mt-0.5 h-5 w-5 rounded border-stone-300 text-indigo-500 focus:ring-indigo-500"
         />
-        <span className="text-sm text-stone-700">
+        <span className="text-sm text-[var(--color-ink)]">
           Ik begrijp dat dit een aanvullende, niet-wetenschappelijke laag is, bedoeld voor
           zelfreflectie.
         </span>
@@ -60,8 +60,9 @@ export default function HumanDesignIntro({ onAccept, onSkip }: Props) {
           onClick={onAccept}
           disabled={!agreed}
           className={`rounded-lg px-6 py-2.5 text-sm font-medium text-white transition ${
-            agreed ? 'bg-indigo-600 hover:bg-indigo-500' : 'cursor-not-allowed bg-stone-300'
+            agreed ? 'hover:opacity-90' : 'cursor-not-allowed bg-stone-300'
           }`}
+          style={agreed ? { backgroundColor: 'var(--color-indigo-cluster)' } : undefined}
         >
           Doorgaan
         </button>

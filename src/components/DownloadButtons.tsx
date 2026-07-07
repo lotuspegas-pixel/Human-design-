@@ -46,7 +46,8 @@ export default function DownloadButtons({ sections, result, onReset }: Props) {
     <div className="flex flex-wrap gap-3 print:hidden">
       <button
         onClick={handlePrint}
-        className="rounded-lg bg-stone-800 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-stone-700"
+        className="rounded-lg px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
+        style={{ backgroundColor: 'var(--color-ink)' }}
       >
         Print rapport
       </button>

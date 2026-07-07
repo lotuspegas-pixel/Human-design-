@@ -28,16 +28,16 @@ export default function BirthDataForm({ onSubmit, onBack, isCalculating, error }
 
   return (
     <div className="mx-auto max-w-xl">
-      <h2 className="mb-2 text-2xl font-bold text-stone-800">Je geboortegegevens</h2>
-      <p className="mb-6 text-stone-500">
+      <h2 className="mb-2 font-display text-2xl font-medium text-[var(--color-ink)]">Je geboortegegevens</h2>
+      <p className="mb-6 text-[var(--color-ink-soft)]">
         Voor een nauwkeurige berekening is de exacte geboortetijd belangrijk. Weet je die niet
         zeker? Vraag het na op je geboorteakte of bij je ouders — een verschil van enkele minuten
         kan de uitkomst beïnvloeden.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="card-surface space-y-5 p-6 sm:p-8">
         <div>
-          <label htmlFor="firstName" className="mb-1 block text-sm font-medium text-stone-700">
+          <label htmlFor="firstName" className="mb-1 block text-sm font-medium text-[var(--color-ink)]">
             Voornaam
           </label>
           <input
@@ -51,7 +51,7 @@ export default function BirthDataForm({ onSubmit, onBack, isCalculating, error }
         </div>
 
         <div>
-          <label htmlFor="birthDate" className="mb-1 block text-sm font-medium text-stone-700">
+          <label htmlFor="birthDate" className="mb-1 block text-sm font-medium text-[var(--color-ink)]">
             Geboortedatum
           </label>
           <input
@@ -64,7 +64,7 @@ export default function BirthDataForm({ onSubmit, onBack, isCalculating, error }
         </div>
 
         <div>
-          <label htmlFor="birthTime" className="mb-1 block text-sm font-medium text-stone-700">
+          <label htmlFor="birthTime" className="mb-1 block text-sm font-medium text-[var(--color-ink)]">
             Geboortetijd (zo precies mogelijk)
           </label>
           <input
@@ -77,7 +77,7 @@ export default function BirthDataForm({ onSubmit, onBack, isCalculating, error }
         </div>
 
         <div>
-          <label htmlFor="timeZone" className="mb-1 block text-sm font-medium text-stone-700">
+          <label htmlFor="timeZone" className="mb-1 block text-sm font-medium text-[var(--color-ink)]">
             Tijdzone op moment van geboorte
           </label>
           <select
@@ -95,7 +95,7 @@ export default function BirthDataForm({ onSubmit, onBack, isCalculating, error }
         </div>
 
         <div>
-          <label htmlFor="birthPlace" className="mb-1 block text-sm font-medium text-stone-700">
+          <label htmlFor="birthPlace" className="mb-1 block text-sm font-medium text-[var(--color-ink)]">
             Geboorteplaats (optioneel, alleen voor weergave)
           </label>
           <input
@@ -126,10 +126,9 @@ export default function BirthDataForm({ onSubmit, onBack, isCalculating, error }
             type="submit"
             disabled={!isValid || isCalculating}
             className={`rounded-lg px-6 py-2.5 text-sm font-medium text-white transition ${
-              isValid && !isCalculating
-                ? 'bg-indigo-600 hover:bg-indigo-500'
-                : 'cursor-not-allowed bg-stone-300'
+              isValid && !isCalculating ? 'hover:opacity-90' : 'cursor-not-allowed bg-stone-300'
             }`}
+            style={isValid && !isCalculating ? { backgroundColor: 'var(--color-indigo-cluster)' } : undefined}
           >
             {isCalculating ? 'Bezig met berekenen...' : 'Bereken mijn reading'}
           </button>

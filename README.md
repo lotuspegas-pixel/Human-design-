@@ -77,5 +77,14 @@ Bewerk `src/logic/report.ts` voor de rapportsecties en `src/data/archetypes.ts` 
 ## Technische stack
 
 - Vite + React + TypeScript
-- Tailwind CSS
+- Tailwind CSS v4 met een eigen `@theme`-tokensysteem (kleuren, schaduwen, fonts) in `src/index.css`
+- Zelfgehoste premium typografie: Fraunces (display/serif) + Inter (body), via `@fontsource`
 - Geen backend, geen login, localStorage voor opslag
+
+## Ontwerpsysteem
+
+- `.card-surface` / `.card-surface-lift` — de gedeelde premium kaartstijl (vervangt losse `rounded-xl border shadow-sm` recepten)
+- `.font-display` — Fraunces voor koppen, cijfers en pull-quotes
+- `--color-amber-cluster` / `--color-indigo-cluster` / `--color-karmijn-cluster` / `--color-jade-cluster` — de vier merkkleuren als CSS custom properties
+- `--color-ink` / `--color-ink-soft` / `--color-parchment` — warme neutrale tekst- en achtergrondkleuren
+- `.reveal` — rustige CSS-only entrance-animatie voor het resultatenscherm

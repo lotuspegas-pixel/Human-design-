@@ -10,6 +10,8 @@ import ColorClusterCard from '../components/ColorClusterCard';
 import ReportView from '../components/ReportView';
 import DownloadButtons from '../components/DownloadButtons';
 
+const indigoColor = colorClusters.find((c) => c.id === 'indigo')!.color;
+
 interface Props {
   result: ScoreResult;
   answers: Answer[];
@@ -32,24 +34,60 @@ export default function ResultsPage({ result, answers: _answers, onReset, hdResu
 
   return (
     <div className="space-y-8 print:space-y-4">
-      {/* Header */}
-      <div className="text-center print:text-left">
-        <h2 className="mb-2 text-3xl font-bold text-stone-800">
+      {/* Report cover hero */}
+      <div
+        className="reveal card-surface-lift overflow-hidden p-8 text-center sm:p-12"
+        style={{
+          background: `linear-gradient(160deg, ${mainCluster.color}1a, white 60%)`,
+        }}
+      >
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-ink-soft)]">
           {birthData ? `De reading van ${birthData.firstName}` : 'Jouw Arcana Profile'}
+        </p>
+        <div className="mb-2 font-display text-7xl font-medium leading-none sm:text-8xl" style={{ color: mainCluster.color }}>
+          {Math.round(primaryScore.score100)}
+        </div>
+        <h2 className="mb-3 font-display text-3xl font-medium text-[var(--color-ink)] sm:text-4xl">
+          {primary.name}
         </h2>
-        <p className="text-stone-500">
+        <p className="mx-auto max-w-md border-l-2 pl-4 text-left font-display text-lg italic leading-relaxed text-[var(--color-ink-soft)] sm:text-center sm:border-l-0 sm:pl-0 sm:italic">
+          {primary.meaning}
+        </p>
+        {result.isBlendProfile && (
+          <span className="mt-4 inline-block rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-[var(--color-ink-soft)] shadow-sm">
+            Blend profiel
+          </span>
+        )}
+        <p className="mt-6 text-xs text-[var(--color-ink-soft)]">
           Voltooid op {new Date(result.completedAt).toLocaleDateString('nl-NL')}
         </p>
       </div>
 
+      {/* Secondary / third strip */}
+      <div className="reveal grid gap-3 sm:grid-cols-2" style={{ animationDelay: '80ms' }}>
+        <div className="card-surface flex items-center justify-between p-4 sm:p-5">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wider text-stone-400">Tweede profiel</p>
+            <h3 className="font-display text-lg text-[var(--color-ink)]">{secondary.name}</h3>
+          </div>
+          <span className="font-display text-2xl text-[var(--color-ink-soft)]">{Math.round(secondaryScore.score100)}</span>
+        </div>
+        <div className="card-surface flex items-center justify-between p-4 sm:p-5">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wider text-stone-400">Derde profiel</p>
+            <h3 className="font-display text-lg text-[var(--color-ink)]">{third.name}</h3>
+          </div>
+        </div>
+      </div>
+
       {/* Consistency indicator */}
-      <div className={`rounded-xl border p-4 text-sm ${
+      <div className={`reveal rounded-xl border p-4 text-sm ${
         result.consistency.qualitativeLevel === 'hoog'
           ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
           : result.consistency.qualitativeLevel === 'gemiddeld'
             ? 'border-amber-200 bg-amber-50 text-amber-700'
             : 'border-red-200 bg-red-50 text-red-700'
-      }`}>
+      }`} style={{ animationDelay: '120ms' }}>
         <span className="font-medium">Betrouwbaarheid: </span>
         {result.consistency.score}% consistentie
         {result.consistency.qualitativeLevel === 'hoog'
@@ -61,85 +99,47 @@ export default function ResultsPage({ result, answers: _answers, onReset, hdResu
 
       {/* Human Design CTA or summary */}
       {!hdResult ? (
-        <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 shadow-sm print:hidden">
-          <h3 className="mb-2 text-lg font-semibold text-stone-800">Verdiep je reading</h3>
-          <p className="mb-4 text-sm text-stone-600">
+        <div className="card-surface reveal p-6 print:hidden" style={{ animationDelay: '160ms', background: `linear-gradient(135deg, ${indigoColor}0d, white)` }}>
+          <h3 className="mb-2 font-display text-lg font-medium text-[var(--color-ink)]">Verdiep je reading</h3>
+          <p className="mb-4 text-sm text-[var(--color-ink-soft)]">
             Voeg een extra, optionele laag toe op basis van je geboortemoment (Human Design) en
             ontvang één samengevoegde, persoonlijke reading.
           </p>
           <button
             onClick={onAddHumanDesign}
-            className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-500"
+            className="rounded-lg px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
+            style={{ backgroundColor: 'var(--color-indigo-cluster)' }}
           >
             Voeg Human Design toe
           </button>
         </div>
       ) : (
-        <div className="rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 shadow-sm">
-          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-indigo-400">
+        <div className="card-surface reveal p-6" style={{ animationDelay: '160ms', background: `linear-gradient(135deg, ${indigoColor}0d, white)` }}>
+          <p className="mb-3 text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-indigo-cluster)' }}>
             Energetisch ontwerp
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <h3 className="text-xl font-bold text-stone-800">{typeInfo[hdResult.type].naam}</h3>
-              <p className="text-sm text-stone-600">{typeInfo[hdResult.type].strategie}</p>
+              <h3 className="font-display text-xl font-medium text-[var(--color-ink)]">{typeInfo[hdResult.type].naam}</h3>
+              <p className="text-sm text-[var(--color-ink-soft)]">{typeInfo[hdResult.type].strategie}</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-stone-700">{authorityInfo[hdResult.authority].naam}</h3>
-              <p className="text-sm text-stone-600">Profiel {hdResult.profile[0]}/{hdResult.profile[1]}</p>
+              <h3 className="font-display text-lg font-medium text-[var(--color-ink)]">{authorityInfo[hdResult.authority].naam}</h3>
+              <p className="text-sm text-[var(--color-ink-soft)]">Profiel {hdResult.profile[0]}/{hdResult.profile[1]}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Primary, Secondary, Third */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div
-          className="rounded-xl border-2 p-6 shadow-sm"
-          style={{ borderColor: mainCluster.color }}
-        >
-          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-stone-400">
-            Hoofdprofiel
-          </p>
-          <h3 className="mb-1 text-xl font-bold text-stone-800">{primary.name}</h3>
-          <p className="mb-2 text-lg font-semibold" style={{ color: mainCluster.color }}>
-            {Math.round(primaryScore.score100)} punten
-          </p>
-          <p className="text-sm text-stone-600">{primary.meaning}</p>
-          {result.isBlendProfile && (
-            <span className="mt-3 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
-              Blend profiel
-            </span>
-          )}
-        </div>
-        <div className="rounded-xl border border-stone-200 p-6 shadow-sm">
-          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-stone-400">
-            Tweede profiel
-          </p>
-          <h3 className="mb-1 text-xl font-bold text-stone-800">{secondary.name}</h3>
-          <p className="mb-2 text-lg font-semibold text-stone-500">
-            {Math.round(secondaryScore.score100)} punten
-          </p>
-          <p className="text-sm text-stone-600">{secondary.meaning}</p>
-        </div>
-        <div className="rounded-xl border border-stone-100 bg-stone-50 p-6 shadow-sm">
-          <p className="mb-1 text-xs font-medium uppercase tracking-wider text-stone-400">
-            Derde profiel
-          </p>
-          <h3 className="mb-1 text-lg font-bold text-stone-700">{third.name}</h3>
-          <p className="text-sm text-stone-500">{third.meaning}</p>
-        </div>
-      </div>
-
       {result.isBalancedProfile && (
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-700">
+        <div className="reveal rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-sm text-indigo-700">
           Je profiel is opvallend gebalanceerd: alle kleurclusters liggen dicht bij elkaar.
         </div>
       )}
 
       {/* Archetype Scores */}
-      <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm print:shadow-none">
-        <h3 className="mb-4 text-lg font-semibold text-stone-800">Archetype scores</h3>
+      <div className="card-surface reveal p-6 print:shadow-none sm:p-8" style={{ animationDelay: '200ms' }}>
+        <h3 className="mb-5 font-display text-lg font-medium text-[var(--color-ink)]">Archetype scores</h3>
         {[...result.archetypeScores]
           .sort((a, b) => b.score100 - a.score100)
           .map((s) => {
@@ -157,8 +157,8 @@ export default function ResultsPage({ result, answers: _answers, onReset, hdResu
       </div>
 
       {/* Color Clusters */}
-      <div>
-        <h3 className="mb-4 text-lg font-semibold text-stone-800">Kleurclusters</h3>
+      <div className="reveal" style={{ animationDelay: '240ms' }}>
+        <h3 className="mb-4 font-display text-lg font-medium text-[var(--color-ink)]">Kleurclusters</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           {[...result.clusterScores]
             .sort((a, b) => b.score100 - a.score100)
@@ -178,7 +178,7 @@ export default function ResultsPage({ result, answers: _answers, onReset, hdResu
 
       {/* Report */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-stone-800">
+        <h3 className="mb-4 font-display text-lg font-medium text-[var(--color-ink)]">
           {hdResult ? 'Jouw volledige, samengevoegde reading' : 'Jouw uitgebreide rapport'}
         </h3>
         <ReportView sections={reportSections} />
