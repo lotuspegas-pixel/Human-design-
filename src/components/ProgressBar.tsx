@@ -12,19 +12,23 @@ export default function ProgressBar({ current, total, estimatedMinutesLeft }: Pr
 
   return (
     <div className="mb-6">
-      <div className="mb-1 flex justify-between text-xs text-stone-500">
-        <span>
+      <div className="mb-2 flex items-end justify-between">
+        <span className="text-sm font-medium text-[var(--color-ink)]">
           {t.questionOf(current, total)}
-          {estimatedMinutesLeft !== undefined && <> · {t.minutesLeft(estimatedMinutesLeft)}</>}
         </span>
-        <span>{pct}%</span>
+        <span className="font-display text-sm text-[var(--color-ink-soft)]">{pct}%</span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-stone-200">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-parchment-deep)]">
         <div
-          className="h-full rounded-full bg-amber-500 transition-all duration-300"
+          className="h-full rounded-full bg-[var(--color-ink)] transition-all duration-500 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
+      {estimatedMinutesLeft !== undefined && (
+        <p className="mt-1.5 text-right text-[11px] text-[var(--color-ink-faint)]">
+          {t.minutesLeft(estimatedMinutesLeft)}
+        </p>
+      )}
     </div>
   );
 }

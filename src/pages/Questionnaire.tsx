@@ -104,11 +104,13 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
         text={getQuestionText(locale, question.id)}
         value={currentAnswer?.value ?? null}
         onChange={handleAnswer}
+        number={currentIndex + 1}
+        total={questions.length}
       />
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex justify-between gap-3">
         <button
           onClick={handlePrev}
-          className="rounded-lg border border-stone-300 bg-white px-5 py-2.5 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
+          className="min-h-[48px] rounded-full border border-stone-300 bg-white px-6 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
         >
           {currentIndex === 0 ? t.back : t.previous}
         </button>
@@ -116,7 +118,7 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
           <button
             onClick={handleFinish}
             disabled={!allAnswered}
-            className={`rounded-lg px-6 py-2.5 text-sm font-medium text-white transition ${
+            className={`min-h-[48px] rounded-full px-7 text-sm font-medium text-white transition ${
               allAnswered ? 'hover:opacity-90' : 'cursor-not-allowed bg-stone-300'
             }`}
             style={allAnswered ? { backgroundColor: 'var(--color-ink)' } : undefined}
@@ -127,7 +129,7 @@ export default function Questionnaire({ onComplete, onBack }: Props) {
           <button
             onClick={handleNext}
             disabled={!currentAnswer}
-            className={`rounded-lg px-6 py-2.5 text-sm font-medium text-white transition ${
+            className={`min-h-[48px] rounded-full px-7 text-sm font-medium text-white transition ${
               currentAnswer ? 'hover:opacity-90' : 'cursor-not-allowed bg-stone-300'
             }`}
             style={currentAnswer ? { backgroundColor: 'var(--color-ink)' } : undefined}

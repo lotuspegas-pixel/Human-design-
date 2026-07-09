@@ -86,7 +86,7 @@ export default function App() {
   };
 
   return (
-    <AppLayout>
+    <AppLayout wide={page === 'landing' || page === 'results'}>
       {page === 'landing' && <LandingPage onStart={() => setPage('consent')} />}
       {page === 'consent' && (
         <ConsentScreen onAccept={() => setPage('questionnaire')} onBack={() => setPage('landing')} />

@@ -46,20 +46,26 @@ export default function DownloadButtons({ sections, result, onReset }: Props) {
     <div className="flex flex-wrap gap-3 print:hidden">
       <button
         onClick={handlePrint}
-        className="rounded-lg px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
+        className="inline-flex min-h-[48px] items-center gap-2 rounded-full px-6 text-sm font-medium text-white shadow-sm transition hover:opacity-90"
         style={{ backgroundColor: 'var(--color-ink)' }}
       >
+        <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M6 7V3h8v4M6 14H4v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4h-2M6 12h8v5H6Z" />
+        </svg>
         {t.printReport}
       </button>
       <button
         onClick={handleDownloadText}
-        className="rounded-lg border border-stone-300 bg-white px-5 py-2.5 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
+        className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-stone-300 bg-white px-6 text-sm font-medium text-stone-700 transition hover:bg-stone-50"
       >
+        <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M10 3v10m0 0 3.5-3.5M10 13 6.5 9.5M4 16h12" />
+        </svg>
         {t.downloadAsText}
       </button>
       <button
         onClick={onReset}
-        className="rounded-lg border border-red-200 bg-white px-5 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
+        className="inline-flex min-h-[48px] items-center rounded-full border border-red-200 bg-white px-6 text-sm font-medium text-red-600 transition hover:bg-red-50"
       >
         {t.startNewTest}
       </button>

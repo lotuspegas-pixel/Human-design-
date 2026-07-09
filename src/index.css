@@ -4,79 +4,154 @@
   --font-display: 'Fraunces', ui-serif, Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
+  /* Cluster-accentkleuren (glow, borders, illustratie) */
   --color-amber-cluster: #F59E0B;
   --color-indigo-cluster: #6366F1;
   --color-karmijn-cluster: #DC2626;
   --color-jade-cluster: #10B981;
 
+  /* Donkere, toegankelijke ink-varianten (tekst, labels, kleine accenten) */
+  --color-amber-ink: #92610A;
+  --color-indigo-ink: #4338CA;
+  --color-karmijn-ink: #A81E1E;
+  --color-jade-ink: #0A7355;
+
+  /* Warme neutralen */
   --color-parchment: #FBF8F3;
   --color-parchment-deep: #F4EEE4;
+  --color-parchment-veil: #F8F4EC;
   --color-ink: #292420;
   --color-ink-soft: #574F47;
+  --color-ink-faint: #8B8177;
+  --color-hairline: rgba(41, 36, 32, 0.10);
+  --color-hairline-soft: rgba(41, 36, 32, 0.07);
 
+  /* Premium schaduwen */
   --shadow-card: 0 1px 2px rgba(41, 36, 32, 0.04), 0 8px 24px -8px rgba(41, 36, 32, 0.10);
   --shadow-card-lift: 0 2px 4px rgba(41, 36, 32, 0.05), 0 16px 40px -12px rgba(41, 36, 32, 0.16);
+  --shadow-seal: 0 4px 12px -2px rgba(41, 36, 32, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+
+  /* Zachte editorial gradient voor grote vlakken */
+  --gradient-parchment: radial-gradient(120% 80% at 50% -10%, #FFFFFF 0%, var(--color-parchment) 55%, var(--color-parchment-deep) 130%);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-ink);
   background-color: var(--color-parchment);
+  background-image: var(--gradient-parchment);
+  background-attachment: fixed;
 }
 
 .font-display {
   font-family: var(--font-display);
 }
 
-/* Gedeelde premium kaart-stijl: vervangt de losse "rounded-xl border shadow-sm" recept
-   dat door de hele app werd herhaald. */
+/* ── Premium kaart-oppervlakken ─────────────────────────────── */
 .card-surface {
   border-radius: 1.25rem;
-  border: 1px solid rgba(41, 36, 32, 0.08);
-  background-color: white;
+  border: 1px solid var(--color-hairline-soft);
+  background-color: #fff;
+  background-image: radial-gradient(140% 120% at 100% 0%, rgba(255, 255, 255, 0.9) 0%, var(--color-parchment-veil) 100%);
   box-shadow: var(--shadow-card);
 }
 
 .card-surface-lift {
-  border-radius: 1.25rem;
-  border: 1px solid rgba(41, 36, 32, 0.08);
-  background-color: white;
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-hairline-soft);
+  background-color: #fff;
   box-shadow: var(--shadow-card-lift);
 }
 
-/* Rustige entrance-animatie voor het resultatenscherm, puur CSS. */
+/* Decoratieve hoekdetails voor premium cards */
+.card-corner {
+  position: relative;
+}
+.card-corner::before,
+.card-corner::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--color-hairline);
+  border-style: solid;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.card-corner::before {
+  top: 14px;
+  left: 14px;
+  border-width: 1px 0 0 1px;
+  border-top-left-radius: 4px;
+}
+.card-corner::after {
+  bottom: 14px;
+  right: 14px;
+  border-width: 0 1px 1px 0;
+  border-bottom-right-radius: 4px;
+}
+
+/* Leeskolom voor rapporttekst */
+.reading-column {
+  max-width: 62ch;
+}
+
+/* Toegankelijke focus-ring, consistent overal */
+:where(button, a, select, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-indigo-ink);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* ── Entrance-animatie ──────────────────────────────────────── */
 @keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 .reveal {
-  animation: reveal-up 0.5s ease-out both;
+  animation: reveal-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes seal-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.seal-in {
+  animation: seal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal, .seal-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* ── Print / PDF ────────────────────────────────────────────── */
 @media print {
-  .print\:hidden {
-    display: none !important;
+  .print\:hidden { display: none !important; }
+  header, footer { display: none !important; }
+  html, body {
+    background: #fff !important;
+    background-image: none !important;
   }
-  header, footer {
-    display: none !important;
-  }
-  body {
-    background: white !important;
-  }
-  main {
-    padding: 0 !important;
-  }
-  .reveal {
+  main { padding: 0 !important; max-width: 100% !important; }
+  .reveal, .seal-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
   }
+  .card-surface, .card-surface-lift {
+    box-shadow: none !important;
+    background-image: none !important;
+    border: 1px solid #d8d2c8 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .print-avoid-break { break-inside: avoid; page-break-inside: avoid; }
+  .decorative-aura { display: none !important; }
 }

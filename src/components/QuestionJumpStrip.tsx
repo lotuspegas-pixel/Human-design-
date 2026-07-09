@@ -7,7 +7,7 @@ interface Props {
 
 export default function QuestionJumpStrip({ total, currentIndex, answeredIndexes, onJump }: Props) {
   return (
-    <div className="mb-4 flex gap-1.5 overflow-x-auto pb-2" aria-label="Spring naar vraag">
+    <div className="mb-5 flex flex-wrap gap-1.5" aria-label="Jump to question">
       {Array.from({ length: total }, (_, i) => {
         const isCurrent = i === currentIndex;
         const isAnswered = answeredIndexes.has(i);
@@ -16,16 +16,17 @@ export default function QuestionJumpStrip({ total, currentIndex, answeredIndexes
             key={i}
             type="button"
             onClick={() => onJump(i)}
-            title={`Vraag ${i + 1}`}
-            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-medium transition ${
+            title={`${i + 1}`}
+            aria-current={isCurrent ? 'step' : undefined}
+            className={`h-2.5 rounded-full transition-all duration-200 ${
               isCurrent
-                ? 'bg-stone-800 text-white'
+                ? 'w-6 bg-[var(--color-ink)]'
                 : isAnswered
-                  ? 'bg-amber-200 text-amber-900 hover:bg-amber-300'
-                  : 'bg-stone-100 text-stone-400 hover:bg-stone-200'
+                  ? 'w-2.5 bg-amber-400 hover:bg-amber-500'
+                  : 'w-2.5 bg-[var(--color-parchment-deep)] hover:bg-stone-300'
             }`}
           >
-            {i + 1}
+            <span className="sr-only">{i + 1}</span>
           </button>
         );
       })}
